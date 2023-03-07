@@ -19,6 +19,8 @@ pipeline {
             - string(name, defaultValue, description)
         
         I can use these parameters in any of my stages
+
+        Now on Jenkins, to build the pipeline select the 'Build with parameters' option.
     */
     parameters {
         string(name: 'VERSION', defaultValue: '', description: 'verstion to dpeloy on prod')
@@ -50,12 +52,17 @@ pipeline {
 
     stages {
         stage("build") {
-                        when {
-                // I can define conditions/expressions for each stage, i.e. only run tests on develop branch
-                expression {
-                    // only build if code changes have been made
-                    CODE_CHANGES == true
-                }
+                when {
+                    // I can define conditions/expressions for each stage, i.e. only run tests on develop branch
+                    expression {
+                        // only build if code changes have been made
+                        CODE_CHANGES == true
+                    }
+            }
+            // you can also use external groovy scripts using the script block
+            script {
+                gv = load "script.groovy"
+                gv.buildApp()
             }
             steps {
                 echo "building version ${NEW_VERSION}"
